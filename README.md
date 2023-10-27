@@ -22,6 +22,16 @@ Sync version number in `readme.txt`, `src/block.json` and `plugin.php` with the 
 }
 ```
 
+## Options
+
+```
+Usage: wp-update-project-version [options]
+
+Options:
+  -s, --source package.json  Optional, only package.json is supported
+  -p, --path <path>      Path to file(s) to update
+```
+
 ## Installation
 
 ```
