@@ -1,8 +1,8 @@
 # wp-project-version-sync
 
-A CLI command to update your WordPress plugin, theme og json file header version based off of your `package.json` version.
+A CLI command to update your WordPress plugin, theme, readme.txt and json file header version based off of your `package.json` version.
 
-wp-update-project-version is a CLI command that is most useful when added to your build script in your `package.json`.
+`wp-update-project-version`` is a CLI command that is most useful when added to your build script in your `package.json`.
 
 ## Usage
 
@@ -17,7 +17,7 @@ Sync version number in `readme.txt`, `src/block.json` and `plugin.php` with the 
 {
     "scripts":  {
         "build": "npm run bump && wp-scripts build",
-		"bump": "wp-update-project-version -s package.json -p readme.txt src/block.json plugin.php",
+        "bump": "wp-update-project-version -s package.json -p readme.txt src/block.json plugin.php",
     }
 }
 ```
