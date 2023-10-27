@@ -30,7 +30,7 @@ npm i @soderlind/wp-project-version-sync
 
 ## Credits
 
-This is a fork of [wp-project-version-sync v1.1.0](https://github.com/masonitedoors/wp-project-version-sync) by @masonitedoors, see changelog for my changes.
+This is a fork of [wp-project-version-sync v1.1.0](https://github.com/masonitedoors/wp-project-version-sync) by @masonitedoors, see changelog for my [changes](https://github.com/soderlind/wp-project-version-sync/commit/8a175ab024ccb1a6ae2e21c8e958c373a42d41f5).
 
 
 ## Changelog
