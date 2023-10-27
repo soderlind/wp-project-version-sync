@@ -2,7 +2,7 @@
 
 A CLI command to update your WordPress plugin, theme, readme.txt and json file header version based off of your `package.json` version.
 
-`wp-update-project-version`` is a CLI command that is most useful when added to your build script in your `package.json`.
+`wp-update-project-version` is a CLI command that is most useful when added to your build script in your `package.json`.
 
 ## Usage
 
