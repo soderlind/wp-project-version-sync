@@ -1,6 +1,6 @@
 {
 	"name": "@soderlind/wp-project-version-sync",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"description": "Update your WordPress plugin, theme, readme.txt and json file header version based off of your `package.json` version",
 	"main": "index.js",
 	"scripts": {
