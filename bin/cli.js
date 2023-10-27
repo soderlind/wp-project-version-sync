@@ -1,89 +1,98 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const program = require("commander");
-const chalk = require("chalk");
-const wpThemeVersionPattern = /^((?:<\?php\s+)?\/\*\*?[\s\S]*?Version:)(\s*)([\d.]*)/;
+// Import required modules
+const fs = require('fs');
+const path = require('path');
+const { program } = require('commander');
+const chalk = require('chalk');
 
+// Regular expression pattern to match WordPress version numbers in file headers
+const wpVersionPattern = /((?:<\?php\s+)?Stable tag:|Version:|"version":)(\s+)(["']?)(\d+\.\d+\.\d+)(["']?)/i;
+
+// Run the program.
 run();
 
+// Main function to run the program
 function run() {
-  let paths = [];
-  let errors = [];
-  let srcFileDefault = "package.json";
-  let srcFileVal = srcFileDefault;
+	// Define command line options
+	program
+		.option('-s, --src [srcFile]', "Source of version. Default is your project's package.json")
+		.option('-p, --path <path...>', "Relative path to your plugin or theme's file header.")
+		.parse(process.argv);
 
-  program
-    .option(
-      "-s, --src [srcFile]",
-      "Source of version. Default is your project's package.json"
-    )
-    .option(
-      "-p, --path <path...> [paths]",
-      "Relative path to your plugin or theme's file header."
-    )
-    .parse(process.argv);
+	// Get values of command line options
+	const srcFileVal = program.srcFile || 'package.json';
+	const pathVal = program.opts().path || null;
+	const pathsVal = program.args || null;
 
-  srcFileVal = program.srcFile || srcFileDefault;
-  pathVal = program.path || null;
-  pathsVal = program.args || null;
+	// Check if source file is package.json
+	if (srcFileVal !== 'package.json') {
+		console.error(chalk.red('package.json is the only accepted source at the moment.'));
+		return;
+	}
 
-  if (srcFileVal !== srcFileDefault) {
-    console.error(
-      chalk.red("package.json is the only accepted source at the moment.")
-    );
-  }
+	// Check if any paths were specified
+	if (!pathVal) {
+		console.error(chalk.red('No paths were specified.'));
+		return;
+	}
 
-  if (!pathVal) {
-    console.error(chalk.red("No paths were specified."));
-    return false;
-  }
+	// Print source file and default message
+	console.log(
+		`Source: ${srcFileVal} ${srcFileVal === 'package.json' ? chalk.green('(Default)') : ''}\n`
+	);
 
-  console.log(
-    `Source: ${srcFileVal} ${
-      srcFileDefault === srcFileVal ? chalk.green("(Default)") : ""
-    }\n`
-  );
+	// Combine path values into a single array
+	const paths = [...pathVal, ...pathsVal];
 
-  paths = paths.concat(pathVal, pathsVal);
+	// Loop through each path and update file header
+	let errors = false;
+	paths.forEach((p) => {
+		if (fs.existsSync(p)) {
+			updateFileHeader(p);
+		} else {
+			console.error(chalk.red(`${p} could not be found.`));
+			errors = true;
+		}
+	});
 
-  paths.forEach(p => {
-    if (fs.existsSync(p)) {
-      updateFileHeader(pathVal);
-    } else {
-      errors.push(`${p} could not be found.`)
-    }
-  });
-
-  if (errors.length > 0) {
-    console.error(chalk.red(errors.join('\n')));
-    console.log(chalk.yellow('Done with errors.'))
-  } else {
-    console.log(chalk.green('Done without errors.'))
-  }
+	// Print success or error message
+	if (errors) {
+		console.log(chalk.yellow('Done with errors.'));
+	} else {
+		console.log(chalk.green('Done without errors.'));
+	}
 }
 
+// Function to update the version number in a file header
 function updateFileHeader(pathToFile, version = getPackageJsonVersion()) {
-  let newContent = replaceFileHeaderVersion(pathToFile, version);
-  fs.writeFileSync(pathToFile, newContent, "utf8");
+	// Replace old version number with new version number
+	const newContent = replaceFileHeaderVersion(pathToFile, version);
+	// Write new content to file
+	fs.writeFileSync(pathToFile, newContent, 'utf8');
 }
 
+// Function to get the version number from package.json
 function getPackageJsonVersion() {
-  const packageJson = require(path.resolve(process.cwd(), "package.json"));
-  return packageJson.version;
+	const packageJson = require(path.resolve(process.cwd(), 'package.json'));
+	return packageJson.version;
 }
 
+// Function to replace the version number in a file header
 function replaceFileHeaderVersion(pathToFile, version) {
-  const replaceOutput = function(match, before, whitespace, oldVersion) {
-    return before + whitespace + version;
-  };
-  const file = fs.readFileSync(pathToFile, "utf8");
-  return file.replace(wpThemeVersionPattern, replaceOutput);
+	// Replace old version number with new version number
+	const replaceOutput = function (match, before, whitespace, maybeQuote, oldVersion) {
+		return before + whitespace + maybeQuote + version + maybeQuote;
+	};
+	// Read file contents
+	const file = fs.readFileSync(pathToFile, 'utf8');
+	// Replace version number in file contents
+	return file.replace(wpVersionPattern, replaceOutput);
 }
 
+// Export functions for testing
 module.exports = {
-  updateFileHeader,
-  getPackageJsonVersion,
-  replaceFileHeaderVersion
+	updateFileHeader,
+	getPackageJsonVersion,
+	replaceFileHeaderVersion,
 };

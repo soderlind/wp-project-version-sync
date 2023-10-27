@@ -1,0 +1,10 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "plugin/name",
+	"version": "1.0.0",
+	"title": "Plugin Name",
+	"category": "widgets",
+	"icon": "people",
+	"description": "Plugin description."
+}
