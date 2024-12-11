@@ -38,7 +38,7 @@
 		"@babel/preset-env": "^7.23.2",
 		"babel-jest": "^29.7.0",
 		"chalk": "^4.1.2",
-		"commander": "^11.1.0"
+		"commander": "^12.1.0"
 	},
 	"devDependencies": {
 		"jest": "^29.7.0",
